@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.minzero.divvyup.mapper.DivvyupMasterMapper">
+
+	<!-- Insert MONEY_SPRAYING -->
+	<insert id="insertDivvyupMaster" parameterType="DivvyupMaster" useGeneratedKeys="true" keyProperty="sprayingId">
+		INSERT INTO divvyup_master (
+		token
+		, room_id
+		, user_id
+		, money
+		, count
+		, insert_date
+		) VALUES (
+			#{token}
+			,#{roomId}
+			,#{userId}
+			,#{totalMoney}
+			,#{count}
+			,#{createDate}
+		)
+	</insert>
+
+	<!-- Select MONEY_SPRAYING List -->
+	<select id="selectDivvyupMaster" parameterType="DivvyupMaster" resultType="DivvyupMaster">
+		SELECT
+		token AS token
+		, room_id AS roomId
+		, user_id AS userId
+		, money AS totalMoney
+		, count AS count
+		, insert_date AS createDate
+		FROM divvyup_master
+		WHERE room_id = #{roomId}
+		  AND token = #{token}
+	</select>
+</mapper>
+

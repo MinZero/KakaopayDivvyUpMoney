@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="kr.co.minzero.divvyup.mapper.DivvyupTakeMapper">
+
+	<!-- Dynamic Where Condition -->
+	<sql id="dynamicWhere">
+		<where>
+			<if test="token != null">
+				AND token = #{token}
+			</if>
+			<if test="roomId != null">
+				AND room_id = #{roomId}
+			</if>
+			<if test="type != null">
+				<if test='type.equals("userId")'>
+					AND user_id = #{takeUserId}
+				</if>
+				<if test='type.equals("unTake")'>
+					AND user_id IS NULL
+				</if>
+			</if>
+		</where>
+	</sql>
+	
+	<insert id="insertDivvyupTake" parameterType="DivvyupTake">
+		INSERT INTO divvyup_take_list (
+			token
+			, room_id
+			, take_money
+		) VALUES (
+			#{token}
+			,#{roomId}
+			,#{takeMoney}
+		)
+	</insert>
+
+	<select id="selectDivvyupTake" parameterType="DivvyupTake" resultType="DivvyupTake">
+		SELECT
+		seqno	AS seqno
+		,token	AS token
+		,room_id	AS roomId
+		,take_money AS takeMoney
+		,user_id	AS takeUserId
+		,take_date	AS takeDate
+		FROM divvyup_take_list
+		<include refid="dynamicWhere" />
+	</select>
+
+	<select id="selectDivvyupTakeList" parameterType="DivvyupTake" resultType="DivvyupTake">
+		SELECT 
+			seqno	AS seqno
+			,token	AS token
+			,room_id	AS roomId
+			,take_money AS takeMoney
+			,user_id	AS takeUserId
+			,take_date	AS takeDate
+		FROM divvyup_take_list
+		<include refid="dynamicWhere" />
+	</select>
+	
+	<update id="updateDivvyupTake" parameterType="DivvyupTake">
+		UPDATE divvyup_take_list
+		SET 
+			user_id = #{takeUserId},
+			take_date = #{takeDate}
+		WHERE
+			seqno = #{seqNo}
+	</update>
+</mapper>
