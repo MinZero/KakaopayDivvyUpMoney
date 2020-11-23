@@ -222,7 +222,7 @@ public class DivvyupService {
             divvyupMaster.setResultCode(ResponseCode.FAIL);
             divvyupMaster.setResultMessage("뿌리기 식별값이 존재하지 않습니다.");
         } else {
-            divvyupMaster = divvyupMasterMapper.selectDivvyupMaster(new DivvyupMaster(token, roomId, userId, 0, 0));
+            divvyupMaster = divvyupMasterMapper.selectDivvyupMaster(new DivvyupMaster(token, roomId));
 
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DATE, Config.untilViewDate * -1);

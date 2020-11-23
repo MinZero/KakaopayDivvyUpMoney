@@ -118,7 +118,7 @@ public class DivvyupControllerTest {
 
         // given
         String senderId = "222222";
-        String receiverId = "333333";
+        String receiverId = "999999";
         String roomId = "ROOM002";
 
         Map<String, String> params = new HashMap<>();

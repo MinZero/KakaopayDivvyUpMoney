@@ -24,7 +24,7 @@ public class UserMoneyMapperTest {
         UserMoney userMoney = new UserMoney();
 
         userMoney.setUserId(123456);
-        userMoney.setMoney(1222222);
+        userMoney.setMoney(1000000000);
 
         int rows = userMoneyMapper.updateUserMoney(userMoney);
         assertThat(rows).isGreaterThan(0);

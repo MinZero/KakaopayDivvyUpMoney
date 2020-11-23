@@ -13,10 +13,11 @@ HTTP Header로 전달됩니다.
 문제가 없도록 설계되어야 합니다.
 * 각 기능 및 제약사항에 대한 단위테스트를 반드시 작성합니다.
 
-## 구현 기술
+## 구현 기술 목록
 * 웹서버 : Spring Boot
 * DBMS : Marid DB
-* Redisson : 다중 서버를 위한 Distributed Lock 사용
+* 빌드툴 : maven
+* Redisson : 다중 서버 구성 시 병목현상 방지를 위한 Redis 접속 및 Distributed Lock 사용
 
 ## DBMS
 DIVVYUP_MASTER - 뿌리기 마스터 테이블
@@ -69,8 +70,8 @@ CREATE TABLE `USER_MONEY` (
 기능 : 뿌릴 금액과 뿌릴 인원을 요청값으로 받아 대화방 참여자에게 뿌립니다.
 
 Request
-* URI : /api/divvyup/{token}
-* Method : PUT
+* URI : /api/divvyup
+* Method : POST
 * Header 
     * X-ROOM-ID : 대화방 식별값
     * X-USER-ID : 사용자 식별값
@@ -172,5 +173,9 @@ Response
 }
 ````
 
+### SQL
+* /test/resources/ddl.sql 테이블 생성
+* /test/resources/dml.sql 사용자 잔고 데이터 입력
+
 ### 개선필요사항
-* 뿌리기 실행 시 해당 대화방 식별값과 중복된 토큰이 존재할 경우 SQLException 이 발생됩니다.
+* 뿌리기 실행 시 해당 대화방 식별값과 토큰이 중복되는 경우 SQLException 이 발생됩니다.
