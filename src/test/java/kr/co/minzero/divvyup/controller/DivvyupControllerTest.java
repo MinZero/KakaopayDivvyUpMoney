@@ -52,6 +52,10 @@ public class DivvyupControllerTest {
         this.mockMvc = builder.build();
     }
 
+    /**
+     * 뿌리기 테스트
+     * @throws Exception
+     */
     @Test
     public void testDivvyup() throws Exception {
 
@@ -75,6 +79,10 @@ public class DivvyupControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * 뿌리기 후 다른 사용자가 받기 테스
+     * @throws Exception
+     */
     @Test
     public void testTakeMoney() throws Exception {
 
@@ -113,8 +121,12 @@ public class DivvyupControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * 뿌리기 이후 존재하지 않는 사용자가 받기 실행 테스트
+     * @throws Exception
+     */
     @Test
-    public void testTakeMoneyFail() throws Exception {
+    public void testTakeMoneyFail1() throws Exception {
 
         // given
         String senderId = "222222";
@@ -151,7 +163,10 @@ public class DivvyupControllerTest {
                 .andDo(print());
     }
 
-
+    /**
+     * 뿌리기 이후 동일 사용자 중복 받기 테스트
+     * @throws Exception
+     */
     @Test
     public void testTakeMoneyFail2() throws Exception {
 
@@ -202,6 +217,10 @@ public class DivvyupControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * 뿌리기 이후 모두 사용자가 받은 경우 다른 사용자가 받기 싫패 테스트
+     * @throws Exception
+     */
     @Test
     public void testTakeMoneyFail3() throws Exception {
 
@@ -253,6 +272,10 @@ public class DivvyupControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * 뿌리기 이후 뿌린 사용자 조회 테스트
+     * @throws Exception
+     */
     @Test
     public void testViewResult() throws Exception {
 
@@ -284,6 +307,10 @@ public class DivvyupControllerTest {
                 .andDo(print());
     }
 
+    /**
+     * 뿌리기 이후 한 사용자가 받은 이후 뿌린 사용자 조회 테스트
+     * @throws Exception
+     */
     @Test
     public void testViewResult2() throws Exception {
 
@@ -325,6 +352,42 @@ public class DivvyupControllerTest {
                 .header("X-ROOM-ID", roomId))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.code", is(ResponseCode.SUCCESS)))
+                .andDo(print());
+    }
+
+    /**
+     * 뿌리기 이후 뿌린 사용자가 아닌 경우 조회 테스트
+     * @throws Exception
+     */
+    @Test
+    public void testViewResultFail() throws Exception {
+
+        String userId = "123456";
+        String receiveId = "333333";
+        String roomId = "ROOM001";
+
+        Map<String, String> params = new HashMap<>();
+        params.put("money", "100000");
+        params.put("count", "4");
+
+        MvcResult result = mockMvc.perform(post("/api/divvyup")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .header("X-USER-ID", userId)
+                .header("X-ROOM-ID", roomId)
+                .content(objectMapper.writeValueAsString(params)))
+                .andReturn();
+
+        DivvyupResponse res = objectMapper.readValue(result.getResponse().getContentAsString(), DivvyupResponse.class);
+        Map<String, String> resultMap = (Map<String, String>) res.getBody();
+
+        String token = resultMap.get("token");
+
+        mockMvc.perform(get("/api/divvyup/" + token)
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .header("X-USER-ID", receiveId)
+                .header("X-ROOM-ID", roomId))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.code", is(ResponseCode.FAIL)))
                 .andDo(print());
     }
 }
